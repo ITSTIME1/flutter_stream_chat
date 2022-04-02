@@ -1,3 +1,4 @@
+import 'package:collection/src/iterable_extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
@@ -28,14 +29,15 @@ void main() async {
   ///[Example User Setting]
   /// Manually Generating Tokens
   /// create id and token.
+  /// name argument that mean in avatar name
 
   await client.connectUser(
-    User(id: 'sanghun'),
+    User(id: 'sanghun', name: '상훈이'),
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic2FuZ2h1biJ9.M_G6UdJ5epSIqCoBzH6I-xJWLLizS-1zPTXAJB8qgG4',
   );
 
   /// [Id value optional third arguments Chat room name]
-  final Channel channel = client.channel('messaging');
+  final Channel channel = client.channel('messaging', id: 'flutterdevs');
 
   /// [Initialize Channel State]
   /// This change for chat state
@@ -46,6 +48,7 @@ void main() async {
     MyApp(
       client: client,
       channel: channel,
+      // channel: channel,
     ),
   );
 }
@@ -55,26 +58,26 @@ class MyApp extends StatelessWidget {
 
   final StreamChatClient client;
   final Channel channel;
-  const MyApp({Key? key, required this.client, required this.channel})
-      : super(key: key);
+  // final Channel channel;
+  const MyApp({
+    Key? key,
+    required this.client,
+    required this.channel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      builder: (context, widget) {
-        /// [Provider 역할]
-        /// StreamChat 자체는 위젯인데 위젯 트리에다가 client 정보랑 chatting의 UI widget을 보여주는 역할을한다.
+      debugShowCheckedModeBanner: false,
+      builder: (context, child) {
         return StreamChat(
           client: client,
-          child: widget,
+          child: child,
         );
       },
-
-      /// [Proivder 역할]
-      /// StreamChannel 자체는 위젯인데 위젯트리에다가 channel정보를 공급하고 그걸 가지고 widget에 보여주는 역할을 해준다.
       home: StreamChannel(
         channel: channel,
-        child: const ChannelPage(),
+        child: const ChannelListPage(),
       ),
     );
   }
@@ -109,6 +112,77 @@ class ChannelPage extends StatelessWidget {
           MessageInput(),
         ],
       ),
+    );
+  }
+}
+
+// ignore: slash_for_doc_comments
+/**
+ * [Channel List View]
+ */
+
+class ChannelListPage extends StatelessWidget {
+  const ChannelListPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ChannelsBloc(
+        child: ChannelListView(
+          ///[Old Method]
+          // pagination: const PaginationParams(limit: 5),
+          ///[New Method]
+          limit: 5,
+          channelPreviewBuilder: channelPreviewBuilder,
+          sort: const [
+            SortOption('last_message_at', direction: 1),
+          ],
+          channelWidget: const ChannelPage(),
+        ),
+      ),
+    );
+  }
+
+  ///[Custom Widget]
+
+  Widget channelPreviewBuilder(BuildContext context, Channel channel) {
+    final lastMessage = channel.state?.messages.reversed.firstWhereOrNull(
+      (message) => !message.isDeleted,
+    );
+
+    final subtitle = lastMessage == null ? 'nothing yet' : lastMessage.text!;
+    final opacity = (channel.state?.unreadCount ?? 0) > 0 ? 1.0 : 0.5;
+
+    final theme = StreamChatTheme.of(context);
+
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => StreamChannel(
+              channel: channel,
+              child: const ChannelPage(),
+            ),
+          ),
+        );
+      },
+      leading: ChannelAvatar(
+        selectionThickness: 2,
+        channel: channel,
+      ),
+      title: ChannelName(
+        textStyle: theme.channelPreviewTheme.titleStyle!.copyWith(
+          color: theme.colorTheme.textHighEmphasis.withOpacity(opacity),
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: channel.state!.unreadCount > 0
+          ? CircleAvatar(
+              radius: 10,
+              child: Text(channel.state!.unreadCount.toString()),
+            )
+          : const SizedBox(),
     );
   }
 }
