@@ -34,7 +34,8 @@ void main() async {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoic2FuZ2h1biJ9.M_G6UdJ5epSIqCoBzH6I-xJWLLizS-1zPTXAJB8qgG4',
   );
 
-  final Channel channel = client.channel('messaging', id: 'sanghun');
+  /// [Id value optional third arguments Chat room name]
+  final Channel channel = client.channel('messaging');
 
   /// [Initialize Channel State]
   /// This change for chat state
