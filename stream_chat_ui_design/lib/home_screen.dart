@@ -10,8 +10,15 @@ import 'package:stream_chat_ui_design/view/notifications_screen.dart';
 /**
  * [MainScreen]
  */
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
 
   /// [List Pages]
   final pages = const [
@@ -21,38 +28,59 @@ class HomeScreen extends StatelessWidget {
     ContactScreen(),
   ];
 
+  ///[Index Change]
+  void newChangeIndex(newIndex) {
+    setState(() {
+      _selectedIndex = newIndex;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print('HomeScreen');
     return Scaffold(
-      body: pages[0],
+      body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: AppColors.textLigth,
-        items: const [
+        type: BottomNavigationBarType.fixed,
+        // fixedColor: Colors.white,
+        selectedItemColor: AppColors.secondary,
+        unselectedItemColor: Colors.white.withOpacity(.60),
+        currentIndex: _selectedIndex,
+        onTap: (newIndex) => newChangeIndex(newIndex),
+        items: [
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.bubble_left_bubble_right_fill,
-              color: AppColors.textLigth,
+              color: _selectedIndex == 0
+                  ? AppColors.secondary
+                  : AppColors.iconDark,
             ),
             label: 'Messages',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.bell_solid,
-              color: AppColors.textLigth,
+              color: _selectedIndex == 1
+                  ? AppColors.secondary
+                  : AppColors.iconDark,
             ),
             label: 'Notifications',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.phone_fill,
-              color: AppColors.textLigth,
+              color: _selectedIndex == 2
+                  ? AppColors.secondary
+                  : AppColors.iconDark,
             ),
             label: 'Calls',
           ),
           BottomNavigationBarItem(
             icon: Icon(
               CupertinoIcons.person_2_fill,
-              color: AppColors.textLigth,
+              color: _selectedIndex == 3
+                  ? AppColors.secondary
+                  : AppColors.iconDark,
             ),
             label: 'Contacts',
           ),

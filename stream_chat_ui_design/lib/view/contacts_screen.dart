@@ -5,6 +5,7 @@ class ContactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Contacts');
     return Container(
       child: Center(child: Text('Contact Screen')),
     );

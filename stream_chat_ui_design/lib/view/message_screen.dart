@@ -5,6 +5,7 @@ class MessageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('Message');
     return Container(
       child: Center(child: Text('Message Screen')),
     );
