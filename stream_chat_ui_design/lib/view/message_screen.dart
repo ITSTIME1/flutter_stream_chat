@@ -2,7 +2,11 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:stream_chat_ui_design/component/theme.dart';
+import 'package:stream_chat_ui_design/model/message.data.dart';
 import 'package:stream_chat_ui_design/model/story.data.dart';
+import 'package:intl/intl.dart';
+
+final faker = Faker();
 
 class MessageScreen extends StatelessWidget {
   const MessageScreen({Key? key}) : super(key: key);
@@ -18,7 +22,13 @@ class MessageScreen extends StatelessWidget {
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return Text('test');
+              return MessageTitle(
+                messageData: MessageData(
+                  sendName: faker.person.name().toString(),
+                  message: faker.lorem.sentence().toString(),
+                  dateMessage: DateTime.now(),
+                ),
+              );
             },
           ),
         ),
@@ -60,7 +70,6 @@ class Stories extends StatelessWidget {
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-                  final faker = Faker();
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -115,6 +124,80 @@ class StoryCard extends StatelessWidget {
               letterSpacing: 0.3,
               fontWeight: FontWeight.bold,
             ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MessageTitle extends StatelessWidget {
+  final MessageData messageData;
+  const MessageTitle({Key? key, required this.messageData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    String formatDate = DateFormat('yy/MM/dd').format(messageData.dateMessage);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(15.0),
+          child: ProfilePicture(
+            name: 'Profile',
+            radius: 30.0,
+            fontsize: 15,
+            random: true,
+          ),
+        ),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                messageData.sendName,
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  wordSpacing: 2.0,
+                ),
+              ),
+              Text(
+                messageData.message,
+                style: const TextStyle(
+                  fontSize: 12.0,
+                  wordSpacing: 2.0,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                formatDate,
+                style: const TextStyle(fontSize: 12.0),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 10.0,
+                ),
+                child: Container(
+                  width: 18.0,
+                  height: 18.0,
+                  decoration: const BoxDecoration(
+                    color: AppColors.secondary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Text('1'),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
