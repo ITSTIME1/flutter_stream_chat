@@ -1,3 +1,4 @@
+import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_chat_ui_design/component/theme.dart';
@@ -22,10 +23,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// [List Pages]
   final pages = const [
-    CallsScreen(),
-    NotificationsScreen(),
     MessageScreen(),
+    NotificationsScreen(),
+    CallsScreen(),
     ContactScreen(),
+  ];
+
+  /// [Page Titles]
+  final List<dynamic> pageTitle = [
+    'Messages',
+    'Notifications',
+    'Calls',
+    'Contacts',
   ];
 
   ///[Index Change]
@@ -39,6 +48,28 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     print('HomeScreen');
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        title: Text(pageTitle[_selectedIndex].toString()),
+        leading: const Padding(
+          padding: EdgeInsets.only(left: 15.0),
+          child: Icon(Icons.search),
+        ),
+        actions: [
+          /// [Avatar Profile]
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.transparent,
+              child: ClipOval(
+                child: Image.asset('lib/images/avatar.jpg'),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
