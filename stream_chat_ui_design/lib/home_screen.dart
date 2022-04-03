@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:stream_chat_ui_design/component/theme.dart';
 import 'package:stream_chat_ui_design/view/calls_screen.dart';
 import 'package:stream_chat_ui_design/view/contacts_screen.dart';
@@ -56,18 +57,16 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.only(left: 15.0),
           child: Icon(Icons.search),
         ),
-        actions: [
+        actions: const [
           /// [Avatar Profile]
           Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.transparent,
-              child: ClipOval(
-                child: Image.asset('lib/images/avatar.jpg'),
-              ),
+            padding: EdgeInsets.only(right: 15.0),
+            child: ProfilePicture(
+              name: 'Taesun',
+              radius: 20.0,
+              fontsize: 15,
             ),
-          ),
+          )
         ],
       ),
       body: pages[_selectedIndex],
