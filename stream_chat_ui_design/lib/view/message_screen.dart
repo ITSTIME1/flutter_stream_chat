@@ -5,6 +5,7 @@ import 'package:stream_chat_ui_design/component/theme.dart';
 import 'package:stream_chat_ui_design/model/message.data.dart';
 import 'package:stream_chat_ui_design/model/story.data.dart';
 import 'package:intl/intl.dart';
+import 'package:stream_chat_ui_design/view/chat_screen.dart';
 
 final faker = Faker();
 
@@ -138,69 +139,90 @@ class MessageTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String formatDate = DateFormat('yy/MM/dd').format(messageData.dateMessage);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(15.0),
-          child: ProfilePicture(
-            name: 'Profile',
-            radius: 30.0,
-            fontsize: 15,
-            random: true,
-          ),
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(ChatScreen.route(messageData));
+      },
+      child: Container(
+        height: 100,
+        decoration: const BoxDecoration(
+          border: Border(
+              bottom: BorderSide(
+            color: Colors.grey,
+            width: 0.2,
+          )),
         ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                messageData.sendName,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  wordSpacing: 2.0,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(15.0),
+              child: ProfilePicture(
+                name: 'Profile',
+                radius: 30.0,
+                fontsize: 15,
+                random: true,
               ),
-              Text(
-                messageData.message,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  wordSpacing: 2.0,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                formatDate,
-                style: const TextStyle(fontSize: 12.0),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 10.0,
-                ),
-                child: Container(
-                  width: 18.0,
-                  height: 18.0,
-                  decoration: const BoxDecoration(
-                    color: AppColors.secondary,
-                    shape: BoxShape.circle,
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    messageData.sendName,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                      wordSpacing: 2.0,
+                    ),
                   ),
-                  child: const Center(
-                    child: Text('1'),
+                  Text(
+                    messageData.message,
+                    style: const TextStyle(
+                      fontSize: 12.0,
+                      wordSpacing: 2.0,
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    formatDate,
+                    style: const TextStyle(fontSize: 12.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 10.0,
+                    ),
+                    child: Container(
+                      width: 18.0,
+                      height: 18.0,
+                      decoration: const BoxDecoration(
+                        color: AppColors.secondary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: Text(
+                          '1',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
