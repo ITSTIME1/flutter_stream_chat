@@ -1,14 +1,30 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:stream_chat_flutter_core/stream_chat_flutter_core.dart';
 import 'package:stream_chat_ui_design/component/theme.dart';
 import 'package:stream_chat_ui_design/home_screen.dart';
+import 'package:stream_chat_ui_design/view/select_user_screen.dart';
 
-void main() => runApp(MyApp(appTheme: AppTheme()));
+void main() {
+  /// [Api Key]
+  const apiKey = 'n6knppaxvymd';
+  final client = StreamChatClient(apiKey);
+  runApp(
+    MyApp(
+      client: client,
+      appTheme: AppTheme(),
+    ),
+  );
+}
 
 class MyApp extends StatelessWidget {
   final AppTheme appTheme;
-  const MyApp({Key? key, required this.appTheme}) : super(key: key);
+  final StreamChatClient client;
+  const MyApp({
+    Key? key,
+    required this.appTheme,
+    required this.client,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +33,13 @@ class MyApp extends StatelessWidget {
       theme: appTheme.light,
       darkTheme: appTheme.dark,
       themeMode: ThemeMode.dark,
-      home: const StreamSplashScreen(),
+      builder: (context, child) {
+        return StreamChatCore(
+          client: client,
+          child: child!,
+        );
+      },
+      home: const SelectUserScreen(),
     );
   }
 }
